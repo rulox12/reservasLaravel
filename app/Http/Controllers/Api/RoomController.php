@@ -28,6 +28,8 @@ class RoomController extends Controller
             'type' => 'required|in:single,double,suite',
             'price' => 'required|numeric|min:0.01',
             'status' => 'required|in:available,reserved,occupied',
+            'capacity' => 'required|in:2,4,8',
+            'climate_control' => 'required|in:fan,air_conditioning',
         ]);
 
         $room = Room::create($validatedData);
@@ -51,6 +53,8 @@ class RoomController extends Controller
             'type' => 'required|in:single,double,suite',
             'price' => 'required|numeric|min:0.01',
             'status' => 'required|in:available,reserved,occupied',
+            'capacity' => 'required|in:2,4,8',
+            'climate_control' => 'required|in:fan,air_conditioning',
         ]);
 
         $room = Room::findOrFail($id);

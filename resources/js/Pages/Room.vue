@@ -42,7 +42,6 @@ const deleteRoom = async (roomId) => {
                 button: 'OK',
             });
 
-            // Actualizar la lista de habitaciones reactivas
             reactiveRooms.value = reactiveRooms.value.filter(room => room.id !== roomId);
         } catch (error) {
             console.log(error);
@@ -103,7 +102,6 @@ const saveRoom = async (room) => {
                     button: 'OK',
                 });
 
-                // Agregar la nueva habitación a la lista
                 reactiveRooms.value.push(response.data.room);
             }
         }

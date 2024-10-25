@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -18,52 +20,99 @@ class BookingController extends Controller
             'bookings' => Booking::with(['user', 'room'])->get()
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'total_price' => 'required|numeric|min:0.01',
+            'status' => 'required|in:pending,confirmed,cancelled',
+        ]);
+
+        $booking = Booking::create([
+            'user_id' => $validatedData['user_id'],
+            'room_id' => $validatedData['room_id'],
+            'check_in_date' => $validatedData['check_in_date'],
+            'check_out_date' => $validatedData['check_out_date'],
+            'total_price' => $validatedData['total_price'],
+            'status' => $validatedData['status'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking created successfully!',
+            'booking' => $booking
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'total_price' => 'required|numeric|min:0.01',
+            'status' => 'required|in:pending,confirmed,cancelled',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+        $booking->update($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking updated successfully!',
+            'booking' => $booking
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $booking = Booking::findOrFail($id);
+            $booking->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking deleted successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting booking: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function createReservation(Request $request): JsonResponse
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+            'totalPrice' => 'required|numeric',
+            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $user = User::firstOrCreate(
+            ['email' => $validatedData['email']],
+            ['name' => $validatedData['name']]
+        );
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $reservation = Booking::create([
+            'user_id' => $user->id,
+            'room_id' => $request->input('room_id'),
+            'check_in_date' => $validatedData['startDate'],
+            'check_out_date' => $validatedData['endDate'],
+            'total_price' => $validatedData['totalPrice'],
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'message' => 'Reserva confirmada',
+            'reservation' => $reservation,
+        ], 201);
     }
 }

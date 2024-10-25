@@ -50,6 +50,31 @@
                         <option value="occupied">Occupied</option>
                     </select>
                 </div>
+                <div class="mb-4">
+                    <label for="capacity" class="block text-gray-700">Capacity</label>
+                    <select
+                        v-model="form.capacity"
+                        id="capacity"
+                        required
+                        class="border rounded-lg w-full p-2"
+                    >
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="climate_control" class="block text-gray-700">Climate Control</label>
+                    <select
+                        v-model="form.climate_control"
+                        id="climate_control"
+                        required
+                        class="border rounded-lg w-full p-2"
+                    >
+                        <option value="fan">Fan</option>
+                        <option value="air_conditioning">Air Conditioning</option>
+                    </select>
+                </div>
                 <div class="flex justify-end">
                     <button type="button" @click="closeModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg mr-2">Cancel</button>
                     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">{{ editing ? 'Update Room' : 'Create Room' }}</button>
@@ -106,6 +131,8 @@ const resetForm = () => {
         type: 'single',
         price: 0,
         status: 'available',
+        capacity: '2',
+        climate_control: 'fan',
     };
 };
 

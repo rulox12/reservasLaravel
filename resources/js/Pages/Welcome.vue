@@ -49,8 +49,6 @@ const handleSubmit = async () => {
         airConditioning: airOption.value,
     };
 
-    console.log(requestData);
-
     const response = await axios.get(route('room.available.rooms'), {params: requestData});
 
     if (response.data.success) {
@@ -74,11 +72,19 @@ const calculateTotalPrice = (price, start, end) => {
     return days * price;
 };
 
-const confirmReservation = () => {
+const confirmReservation = async () => {
     if (name.value && email.value) {
-        // Aquí puedes enviar la solicitud de reserva al servidor
-        alert(`Reserva confirmada para ${name.value} en la habitación ${selectedRoom.value.type}`);
         showModal.value = false;
+        const requestData = {
+            startDate: startDate.value,
+            endDate: endDate.value,
+            totalPrice: totalPrice.value,
+            email: email.value,
+            name: name.value,
+            room_id: selectedRoom.value.id
+        }
+
+        const response = await axios.post(route('booking.reservation'), {params: requestData});
     } else {
         alert('Por favor, complete su nombre y correo electrónico.');
     }
@@ -87,9 +93,7 @@ const confirmReservation = () => {
 
 <template>
     <Head title="Welcome"/>
-    <header
-        class="grid grid-cols-2 items-center gap-2 py-2 px-20 lg:grid-cols-3"
-    >
+    <header class="grid grid-cols-2 items-center gap-2 py-2 px-20 lg:grid-cols-3" style="background-color: #b4e3ee">
         <div class="flex lg:col-start-2 lg:justify-center">
             <svg
                 class="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]"
@@ -130,7 +134,7 @@ const confirmReservation = () => {
             </template>
         </nav>
     </header>
-    <!-- Start block -->
+
     <section
         class="bg-cover bg-center py-20"
         style="background-image: url('https://static.vecteezy.com/system/resources/previews/025/871/495/non_2x/travel-destination-background-and-template-design-with-travel-destinations-and-famous-landmarks-and-attractions-for-tourism-let-s-go-travel-illustration-vector.jpg');"
