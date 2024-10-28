@@ -19,7 +19,7 @@ Route::get('/available-rooms', [RoomController::class, 'availableRooms'])->name(
 Route::post('/bookings', [BookingController::class, 'store'])->name('booking.store');
 Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('booking.update');
 Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
-Route::post('/bookings/reservation', [BookingController::class, 'createReservation'])->name('booking.reservation');
+Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');

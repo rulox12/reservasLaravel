@@ -12,7 +12,9 @@ class BookingController extends Controller
     public function index(): Response
     {
         return Inertia::render('Booking', [
-            'bookings' =>  Booking::with(['user', 'room'])->get()
+            'bookings' => Booking::with(['user', 'room'])
+                ->orderBy('created_at', 'desc')
+                ->get()
         ]);
     }
 

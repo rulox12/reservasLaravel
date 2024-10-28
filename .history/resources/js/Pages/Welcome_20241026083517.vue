@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import {inject, ref} from 'vue';
+import { ref } from 'vue';
 
 defineProps({
     canLogin: {
@@ -30,7 +30,6 @@ const selectedRoom = ref(null);
 const name = ref('');
 const email = ref('');
 const totalPrice = ref('');
-const swal = inject('$swal');
 
 const updateMinEndDate = () => {
     if (startDate.value) {
@@ -100,22 +99,8 @@ const confirmReservation = async () => {
             name: name.value,
             room_id: selectedRoom.value.id
         }
-        try{
-            const response = await axios.post(route('booking.reservation'), requestData );
-            swal({
-                title: '¡Reserva Exitosa!',
-                text: 'A su correo le llegará la confirmación de su reserva.',
-                icon: 'success',
-                button: 'OK',
-            });
-        }catch (e) {
-            swal({
-                title: 'Error!',
-                text: e.response?.data?.message,
-                icon: 'error',
-                button: 'OK',
-            });
-        }
+
+        const response = await axios.post(route('booking.reservation'), { params: requestData });
     } else {
         alert('Por favor, complete su nombre y correo electrónico.');
     }
@@ -123,6 +108,7 @@ const confirmReservation = async () => {
 </script>
 
 <template>
+
     <Head title="Welcome" />
     <header class="grid grid-cols-2 items-center gap-2 py-2 px-20 lg:grid-cols-3" style="background-color: #b4e3ee">
         <div class="flex lg:col-start-2 lg:justify-center">
@@ -186,11 +172,10 @@ const confirmReservation = async () => {
                 </div>
                 <div class="sm:flex sm:space-x-4">
                     <div class="flex items-center">
-                        <input id="air_conditioning" type="radio" v-model="airOption" value="air_conditioning"
+                        <input id="air-conditioning" type="radio" v-model="airOption" value="air-conditioning"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="air_conditioning" class="ml-2 text-sm font-medium text-gray-900">
-                            Con aire acondicionado
-                        </label>
+                        <label for="air-conditioning" class="ml-2 text-sm font-medium text-gray-900">Con aire
+                            acondicionado</label>
                     </div>
                     <div class="flex items-center">
                         <input id="fan" type="radio" v-model="airOption" value="fan"
@@ -228,7 +213,7 @@ const confirmReservation = async () => {
                 </div>
                 <div class="mb-4">
                     <ul class="list-disc list-inside text-gray-600 dark:text-gray-300">
-                        <li v-if="item.climate_control === 'air_conditioning'">Aire acondicionado</li>
+                        <li v-if="item.airConditioning">Aire acondicionado</li>
                         <li>Acceso a piscina</li>
                         <li>Todas las comidas incluidas</li>
                     </ul>
@@ -242,15 +227,15 @@ const confirmReservation = async () => {
         </div>
     </section>
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full h-[80vh] overflow-y-auto">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
             <!-- Carrusel de imágenes -->
             <div class="mb-4">
                 <div class="relative">
                     <img :src="images[currentImageIndex]" alt="Imagen de habitación" class="w-full rounded-lg" />
                     <button @click="prevImage"
-                            class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white p-1 rounded-full text-gray-700">&lt;</button>
+                        class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white p-1 rounded-full text-gray-700">&lt;</button>
                     <button @click="nextImage"
-                            class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white p-1 rounded-full text-gray-700">&gt;</button>
+                        class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white p-1 rounded-full text-gray-700">&gt;</button>
                 </div>
             </div>
 
@@ -265,18 +250,18 @@ const confirmReservation = async () => {
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Nombre</label>
                 <input type="text" id="name" v-model="name"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
             </div>
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Correo
                     Electrónico</label>
                 <input type="email" id="email" v-model="email"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
             </div>
 
             <div class="flex justify-end space-x-4">
                 <button @click="showModal = false"
-                        class="text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 rounded px-4 py-2">
+                    class="text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 rounded px-4 py-2">
                     Cancelar
                 </button>
                 <button @click="confirmReservation" class="text-white bg-blue-600 hover:bg-blue-700 rounded px-4 py-2">
@@ -285,4 +270,5 @@ const confirmReservation = async () => {
             </div>
         </div>
     </div>
+
 </template>

@@ -1,5 +1,4 @@
 <script setup>
-// Importaciones
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, inject, watch } from 'vue';
@@ -24,11 +23,11 @@ const editRoom = (room) => {
 
 const deleteRoom = async (roomId) => {
     const confirmed = await swal({
-        title: 'Are you sure?',
-        text: 'This action cannot be undone.',
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Delete",
+        confirmButtonText: "Eliminar",
     });
 
     if (confirmed.isConfirmed) {
@@ -36,8 +35,8 @@ const deleteRoom = async (roomId) => {
             await axios.delete(route('room.destroy', roomId));
 
             swal({
-                title: 'Deleted!',
-                text: 'Room deleted successfully!',
+                title: '¡Eliminado!',
+                text: '¡Habitación eliminada con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
@@ -46,16 +45,16 @@ const deleteRoom = async (roomId) => {
         } catch (error) {
             console.log(error);
             swal({
-                title: 'Error!',
-                text: 'There was an issue deleting the room.',
+                title: '¡Error!',
+                text: 'Hubo un problema al eliminar la habitación.',
                 icon: 'error',
                 button: 'OK',
             });
         }
     } else {
         swal({
-            title: 'Cancelled',
-            text: 'The room was not deleted.',
+            title: 'Cancelado',
+            text: 'La habitación no fue eliminada.',
             icon: 'info',
             button: 'OK',
         });
@@ -80,8 +79,8 @@ const saveRoom = async (room) => {
             await axios.put(route('room.update', room.id), room);
 
             swal({
-                title: 'Success!',
-                text: 'Room updated successfully!',
+                title: '¡Éxito!',
+                text: '¡Habitación actualizada con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
@@ -96,7 +95,7 @@ const saveRoom = async (room) => {
 
             if (response.data.success) {
                 swal({
-                    title: 'Success!',
+                    title: '¡Éxito!',
                     text: response.data.message,
                     icon: 'success',
                     button: 'OK',
@@ -107,8 +106,8 @@ const saveRoom = async (room) => {
         }
     } catch (error) {
         swal({
-            title: 'Error!',
-            text: 'There was an issue saving the room.',
+            title: '¡Error!',
+            text: 'Hubo un problema al guardar la habitación.',
             icon: 'error',
             button: 'OK',
         });
@@ -123,7 +122,7 @@ const saveRoom = async (room) => {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Rooms
+                Habitaciones
             </h2>
         </template>
 
@@ -131,24 +130,24 @@ const saveRoom = async (room) => {
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div class="flex justify-between mb-4">
                     <button @click="createRoom" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                        Add New Room
+                        Añadir Nueva Habitación
                     </button>
                 </div>
 
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveRooms?.length === 0" class="text-center">
-                        <p class="text-gray-600">No rooms available. Please add a room.</p>
+                        <p class="text-gray-600">No hay habitaciones disponibles. Por favor, añade una habitación.</p>
                     </div>
 
                     <div v-else>
                         <table class="min-w-full">
                             <thead>
                             <tr>
-                                <th class="px-4 py-2 text-left">Room Number</th>
-                                <th class="px-4 py-2 text-left">Type</th>
-                                <th class="px-4 py-2 text-left">Price</th>
-                                <th class="px-4 py-2 text-left">Status</th>
-                                <th class="px-4 py-2 text-left">Actions</th>
+                                <th class="px-4 py-2 text-left">Número de Habitación</th>
+                                <th class="px-4 py-2 text-left">Tipo</th>
+                                <th class="px-4 py-2 text-left">Precio</th>
+                                <th class="px-4 py-2 text-left">Estado</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>

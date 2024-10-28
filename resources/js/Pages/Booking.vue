@@ -25,11 +25,11 @@ const editBooking = (booking) => {
 
 const deleteBooking = async (bookingId) => {
     const confirmed = await swal({
-        title: 'Are you sure?',
-        text: 'This action cannot be undone.',
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Delete",
+        confirmButtonText: "Eliminar",
     });
 
     if (confirmed.isConfirmed) {
@@ -37,8 +37,8 @@ const deleteBooking = async (bookingId) => {
             await axios.delete(route('booking.destroy', bookingId));
 
             swal({
-                title: 'Deleted!',
-                text: 'Booking deleted successfully!',
+                title: '¡Eliminado!',
+                text: '¡Reserva eliminada con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
@@ -47,16 +47,16 @@ const deleteBooking = async (bookingId) => {
         } catch (error) {
             console.log(error);
             swal({
-                title: 'Error!',
-                text: 'There was an issue deleting the booking.',
+                title: '¡Error!',
+                text: 'Hubo un problema al eliminar la reserva.',
                 icon: 'error',
                 button: 'OK',
             });
         }
     } else {
         swal({
-            title: 'Cancelled',
-            text: 'The booking was not deleted.',
+            title: 'Cancelado',
+            text: 'La reserva no fue eliminada.',
             icon: 'info',
             button: 'OK',
         });
@@ -73,14 +73,14 @@ const fetchUsersAndRooms = async () => {
     try {
         const usersResponse = await axios.get(route('users.index'));
         const roomsResponse = await axios.get(route('rooms.index'));
-        console.log(roomsResponse);
+
         users.value = usersResponse?.data?.users;
         rooms.value = roomsResponse?.data?.rooms;
     } catch (error) {
         console.error('Error fetching users or rooms:', error);
         swal({
-            title: 'Error!',
-            text: 'Could not fetch users or rooms.',
+            title: '¡Error!',
+            text: 'No se pudieron obtener usuarios o habitaciones.',
             icon: 'error',
             button: 'OK',
         });
@@ -100,8 +100,8 @@ const saveBooking = async (booking) => {
             await axios.put(route('booking.update', booking.id), booking);
 
             swal({
-                title: 'Success!',
-                text: 'Booking updated successfully!',
+                title: '¡Éxito!',
+                text: '¡Reserva actualizada con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
@@ -115,7 +115,7 @@ const saveBooking = async (booking) => {
 
             if (response.data.success) {
                 swal({
-                    title: 'Success!',
+                    title: '¡Éxito!',
                     text: response.data.message,
                     icon: 'success',
                     button: 'OK',
@@ -126,8 +126,8 @@ const saveBooking = async (booking) => {
         }
     } catch (error) {
         swal({
-            title: 'Error!',
-            text: 'There was an issue saving the booking.',
+            title: '¡Error!',
+            text: 'Hubo un problema al guardar la reserva.',
             icon: 'error',
             button: 'OK',
         });
@@ -142,7 +142,7 @@ const saveBooking = async (booking) => {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Bookings
+                Reservas
             </h2>
         </template>
 
@@ -151,7 +151,7 @@ const saveBooking = async (booking) => {
                 <div class="flex justify-between mb-4">
                     <button @click="createBooking"
                             class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                        Add New Booking
+                        Crear nueva reserva
                     </button>
                 </div>
 
@@ -164,12 +164,12 @@ const saveBooking = async (booking) => {
                         <table class="min-w-full">
                             <thead>
                             <tr>
-                                <th class="px-4 py-2 text-left">Customer Name</th>
-                                <th class="px-4 py-2 text-left">Room Number</th>
-                                <th class="px-4 py-2 text-left">Check-in Date</th>
-                                <th class="px-4 py-2 text-left">Check-out Date</th>
-                                <th class="px-4 py-2 text-left">Status</th>
-                                <th class="px-4 py-2 text-left">Actions</th>
+                                <th class="px-4 py-2 text-left">Nombre del Cliente</th>
+                                <th class="px-4 py-2 text-left">Número de Habitación</th>
+                                <th class="px-4 py-2 text-left">Fecha de Check-in</th>
+                                <th class="px-4 py-2 text-left">Fecha de Check-out</th>
+                                <th class="px-4 py-2 text-left">Estado</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -178,7 +178,16 @@ const saveBooking = async (booking) => {
                                 <td class="border px-4 py-2">{{ booking.room.room_number }}</td>
                                 <td class="border px-4 py-2">{{ booking.check_in_date }}</td>
                                 <td class="border px-4 py-2">{{ booking.check_out_date }}</td>
-                                <td class="border px-4 py-2">{{ booking.status }}</td>
+                                <td class="border px-4 py-2">
+                                    <span
+                                        :class="{
+                                            'bg-green-500 text-white rounded-full px-2 py-1': booking.status === 'confirmed',
+                                            'bg-red-500 text-white rounded-full px-2 py-1': booking.status === 'pending'
+                                        }"
+                                    >
+                                        {{ booking.status }}
+                                    </span>
+                                </td>
                                 <td class="border px-4 py-2">
                                     <button @click="editBooking(booking)" class="text-green-500 hover:text-green-600">
                                         <svg class="h-5 w-5 text-green-300" viewBox="0 0 24 24" stroke-width="2"

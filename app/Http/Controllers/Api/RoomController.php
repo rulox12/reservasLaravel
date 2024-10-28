@@ -92,8 +92,8 @@ class RoomController extends Controller
             $request->validate([
                 'startDate' => 'required|date|after_or_equal:today',
                 'endDate' => 'required|date|after:startDate',
-                'capacity' => 'nullable|integer|min:1',
-                'airConditioning' => 'nullable',
+                'capacity' => 'required|integer|min:1',
+                'airConditioning' => 'required',
             ]);
 
             $startDate = $request->input('startDate');
@@ -102,31 +102,29 @@ class RoomController extends Controller
             $airConditioning = $request->input('airConditioning');
 
             $availableRooms = Room::whereDoesntHave('bookings', function ($query) use ($startDate, $endDate) {
-                $query->where(function ($subQuery) use ($startDate, $endDate) {
-                    $subQuery->where('check_in_date', '<', $endDate)
-                        ->where('check_out_date', '>', $startDate);
-                });
+                $query->where('check_in_date', '<', $endDate)
+                    ->where('check_out_date', '>', $startDate);
             });
 
             if ($capacity) {
                 $availableRooms->where('capacity', '>=', $capacity);
             }
 
-            if ($airConditioning !== null) {
-                $availableRooms->where('climate_control', $airConditioning ? 'air_conditioning' : 'fan');
+            if (!is_null($airConditioning)) {
+                $availableRooms->where('climate_control', $airConditioning);
             }
 
             $availableRooms = $availableRooms->get();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Room updated successfully!',
+                'message' => 'Habitaciones disponibles encontradas.',
                 'rooms' => $availableRooms
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al buscar habitación: ' . $e->getMessage(),
+                'message' => 'Error al buscar habitaciones: ' . $e->getMessage(),
                 'rooms' => []
             ], 500);
         }

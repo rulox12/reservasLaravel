@@ -1,10 +1,10 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-            <h2 class="text-xl font-semibold mb-4">{{ editing ? 'Edit Room' : 'Add New Room' }}</h2>
+            <h2 class="text-xl font-semibold mb-4">{{ editing ? 'Editar Habitación' : 'Añadir Nueva Habitación' }}</h2>
             <form @submit.prevent="handleSubmit">
                 <div class="mb-4">
-                    <label for="room_number" class="block text-gray-700">Room Number</label>
+                    <label for="room_number" class="block text-gray-700">Número de Habitación</label>
                     <input
                         type="text"
                         v-model="form.room_number"
@@ -14,20 +14,20 @@
                     />
                 </div>
                 <div class="mb-4">
-                    <label for="type" class="block text-gray-700">Type</label>
+                    <label for="type" class="block text-gray-700">Tipo</label>
                     <select
                         v-model="form.type"
                         id="type"
                         required
                         class="border rounded-lg w-full p-2"
                     >
-                        <option value="single">Single</option>
-                        <option value="double">Double</option>
+                        <option value="single">Individual</option>
+                        <option value="double">Doble</option>
                         <option value="suite">Suite</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="price" class="block text-gray-700">Price</label>
+                    <label for="price" class="block text-gray-700">Precio</label>
                     <input
                         type="number"
                         v-model="form.price"
@@ -38,20 +38,20 @@
                     />
                 </div>
                 <div class="mb-4">
-                    <label for="status" class="block text-gray-700">Status</label>
+                    <label for="status" class="block text-gray-700">Estado</label>
                     <select
                         v-model="form.status"
                         id="status"
                         required
                         class="border rounded-lg w-full p-2"
                     >
-                        <option value="available">Available</option>
-                        <option value="reserved">Reserved</option>
-                        <option value="occupied">Occupied</option>
+                        <option value="available">Disponible</option>
+                        <option value="reserved">Reservado</option>
+                        <option value="occupied">Ocupado</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="capacity" class="block text-gray-700">Capacity</label>
+                    <label for="capacity" class="block text-gray-700">Capacidad</label>
                     <select
                         v-model="form.capacity"
                         id="capacity"
@@ -64,20 +64,20 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="climate_control" class="block text-gray-700">Climate Control</label>
+                    <label for="climate_control" class="block text-gray-700">Control Climático</label>
                     <select
                         v-model="form.climate_control"
                         id="climate_control"
                         required
                         class="border rounded-lg w-full p-2"
                     >
-                        <option value="fan">Fan</option>
-                        <option value="air_conditioning">Air Conditioning</option>
+                        <option value="fan">Ventilador</option>
+                        <option value="air_conditioning">Aire Acondicionado</option>
                     </select>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" @click="closeModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg mr-2">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">{{ editing ? 'Update Room' : 'Create Room' }}</button>
+                    <button type="button" @click="closeModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg mr-2">Cancelar</button>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">{{ editing ? 'Actualizar Habitación' : 'Crear Habitación' }}</button>
                 </div>
             </form>
         </div>

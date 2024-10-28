@@ -24,16 +24,16 @@ const showingNavigationDropdown = ref(false);
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Home
+                                    Inicio
                                 </NavLink>
                                 <NavLink :href="route('user.index')" :active="route().current('user.index')">
-                                    User
+                                    Usuario
                                 </NavLink>
                                 <NavLink :href="route('room.index')" :active="route().current('room.index')">
-                                    Room
+                                    Habitación
                                 </NavLink>
                                 <NavLink :href="route('booking.index')" :active="route().current('booking.index')">
-                                    Booking
+                                    Reserva
                                 </NavLink>
                             </div>
                         </div>

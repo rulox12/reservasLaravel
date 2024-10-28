@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\User;
+use App\Notifications\ReservationConfirmed;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -94,12 +95,22 @@ class BookingController extends Controller
             'totalPrice' => 'required|numeric',
             'email' => 'required|email',
             'name' => 'required|string|max:255',
+            'room_id' => 'required|exists:rooms,id',
         ]);
 
-        $user = User::firstOrCreate(
-            ['email' => $validatedData['email']],
-            ['name' => $validatedData['name']]
+        $isRoomAvailable = $this->isRoomAvailable(
+            $validatedData['room_id'],
+            $validatedData['startDate'],
+            $validatedData['endDate']
         );
+
+        if (!$isRoomAvailable) {
+            return response()->json([
+                'message' => 'La habitación no está disponible en el rango de fechas seleccionado.',
+            ], 422);
+        }
+
+        $user = $this->findOrCreateUser($validatedData['email'], $validatedData['name']);
 
         $reservation = Booking::create([
             'user_id' => $user->id,
@@ -110,9 +121,41 @@ class BookingController extends Controller
             'status' => 'pending',
         ]);
 
+        $user->notify(new ReservationConfirmed($reservation));
+
         return response()->json([
             'message' => 'Reserva confirmada',
             'reservation' => $reservation,
         ], 201);
+    }
+
+    private function findOrCreateUser(string $email, string $name): User
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'email' => $email,
+                'name' => $name,
+                'password' => bcrypt($name),
+                'role' => 'client',
+            ]);
+        }
+
+        return $user;
+    }
+
+    private function isRoomAvailable(int $roomId, string $startDate, string $endDate): bool
+    {
+        return !Booking::where('room_id', $roomId)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('check_in_date', [$startDate, $endDate])
+                    ->orWhereBetween('check_out_date', [$startDate, $endDate])
+                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                        $query->where('check_in_date', '<=', $startDate)
+                            ->where('check_out_date', '>=', $endDate);
+                    });
+            })
+            ->exists();
     }
 }
