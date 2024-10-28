@@ -1,10 +1,9 @@
 <script setup>
-// Importaciones
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, inject, watch } from 'vue';
+import {Head} from '@inertiajs/vue3';
+import {ref, inject, watch} from 'vue';
 import axios from 'axios';
-import UserModal from './User/UserModal.vue';  // Cambiado a UserModal
+import UserModal from './User/UserModal.vue';
 
 const swal = inject('$swal');
 
@@ -24,11 +23,11 @@ const editUser = (user) => {
 
 const deleteUser = async (userId) => {
     const confirmed = await swal({
-        title: 'Are you sure?',
-        text: 'This action cannot be undone.',
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Delete",
+        confirmButtonText: "Eliminar",
     });
 
     if (confirmed.isConfirmed) {
@@ -36,27 +35,26 @@ const deleteUser = async (userId) => {
             await axios.delete(route('users.destroy', userId));
 
             swal({
-                title: 'Deleted!',
-                text: 'User deleted successfully!',
+                title: '¡Eliminado!',
+                text: '¡Usuario eliminado con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
 
-            // Actualizar la lista de usuarios reactivas
             reactiveUsers.value = reactiveUsers.value.filter(user => user.id !== userId);
         } catch (error) {
             console.log(error);
             swal({
-                title: 'Error!',
-                text: 'There was an issue deleting the user.',
+                title: '¡Error!',
+                text: 'Hubo un problema al eliminar el usuario.',
                 icon: 'error',
                 button: 'OK',
             });
         }
     } else {
-        swal({
-            title: 'Cancelled',
-            text: 'The user was not deleted.',
+        wal({
+            title: 'Cancelado',
+            text: 'El usuario no fue eliminado.',
             icon: 'info',
             button: 'OK',
         });
@@ -81,8 +79,8 @@ const saveUser = async (user) => {
             await axios.put(route('users.update', user.id), user);
 
             swal({
-                title: 'Success!',
-                text: 'User updated successfully!',
+                title: '¡Éxito!',
+                text: '¡Usuario actualizado con éxito!',
                 icon: 'success',
                 button: 'OK',
             });
@@ -96,20 +94,19 @@ const saveUser = async (user) => {
 
             if (response.data.success) {
                 swal({
-                    title: 'Success!',
+                    title: '¡Éxito!',
                     text: response.data.message,
                     icon: 'success',
                     button: 'OK',
                 });
 
-                // Agregar el nuevo usuario a la lista
                 reactiveUsers.value.push(response.data.user);
             }
         }
     } catch (error) {
         swal({
-            title: 'Error!',
-            text: 'There was an issue saving the user.',
+            title: '¡Error!',
+            text: 'Hubo un problema al guardar el usuario.',
             icon: 'error',
             button: 'OK',
         });
@@ -123,7 +120,7 @@ const saveUser = async (user) => {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Users
+                Usuario
             </h2>
         </template>
 
@@ -131,23 +128,23 @@ const saveUser = async (user) => {
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div class="flex justify-between mb-4">
                     <button @click="createUser" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                        Add New User
+                        Añadir Nuevo Usuario
                     </button>
                 </div>
 
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveUsers?.length === 0" class="text-center">
-                        <p class="text-gray-600">No users available. Please add a user.</p>
+                        <p class="text-gray-600">No hay usuarios disponibles. Por favor, agrega un usuario.</p>
                     </div>
 
                     <div v-else>
                         <table class="min-w-full">
                             <thead>
                             <tr>
-                                <th class="px-4 py-2 text-left">Name</th>
-                                <th class="px-4 py-2 text-left">Email</th>
-                                <th class="px-4 py-2 text-left">Role</th>
-                                <th class="px-4 py-2 text-left">Actions</th>
+                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Correo Electrónico</th>
+                                <th class="px-4 py-2 text-left">Rol</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>

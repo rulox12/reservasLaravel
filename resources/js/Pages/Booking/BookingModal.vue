@@ -1,22 +1,22 @@
 <template>
     <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-            <h2 class="text-xl font-semibold mb-4">{{ editing ? 'Edit Booking' : 'Add New Booking' }}</h2>
+            <h2 class="text-xl font-semibold mb-4">{{ editing ? 'Editar Reserva' : 'Agregar Nueva Reserva' }}</h2>
             <form @submit.prevent="handleSubmit">
                 <div class="mb-4">
-                    <label for="user" class="block mb-1">User</label>
+                    <label for="user" class="block mb-1">Usuario</label>
                     <select v-model="booking.user_id" class="border rounded-lg w-full p-2">
                         <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="room" class="block mb-1">Room</label>
+                    <label for="room" class="block mb-1">Habitación</label>
                     <select v-model="booking.room_id" class="border rounded-lg w-full p-2">
                         <option v-for="room in rooms" :key="room.id" :value="room.id">{{ room.room_number }}</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="check_in_date" class="block text-gray-700">Check-In Date</label>
+                    <label for="check_in_date" class="block text-gray-700">Fecha de Entrada</label>
                     <input
                         type="date"
                         v-model="form.check_in_date"
@@ -26,7 +26,7 @@
                     />
                 </div>
                 <div class="mb-4">
-                    <label for="check_out_date" class="block text-gray-700">Check-Out Date</label>
+                    <label for="check_out_date" class="block text-gray-700">Fecha de Salida</label>
                     <input
                         type="date"
                         v-model="form.check_out_date"
@@ -36,7 +36,7 @@
                     />
                 </div>
                 <div class="mb-4">
-                    <label for="total_price" class="block text-gray-700">Total Price</label>
+                    <label for="total_price" class="block text-gray-700">Precio Total</label>
                     <input
                         type="number"
                         v-model="form.total_price"
@@ -47,21 +47,21 @@
                     />
                 </div>
                 <div class="mb-4">
-                    <label for="status" class="block text-gray-700">Status</label>
+                    <label for="status" class="block text-gray-700">Estado</label>
                     <select
                         v-model="form.status"
                         id="status"
                         required
                         class="border rounded-lg w-full p-2"
                     >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="confirmed">Confirmado</option>
+                        <option value="cancelled">Cancelado</option>
                     </select>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" @click="closeModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg mr-2">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">{{ editing ? 'Update Booking' : 'Create Booking' }}</button>
+                    <button type="button" @click="closeModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg mr-2">Cancelar</button>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">{{ editing ? 'Actualizar Reserva' : 'Crear Reserva' }}</button>
                 </div>
             </form>
         </div>

@@ -19,6 +19,7 @@ const users = ref([]);
 const rooms = ref([]);
 
 const editBooking = (booking) => {
+    fetchUsersAndRooms();
     selectedBooking.value = booking;
     isModalOpen.value = true;
 };
