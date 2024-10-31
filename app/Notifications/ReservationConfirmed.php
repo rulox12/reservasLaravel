@@ -20,12 +20,12 @@ class ReservationConfirmed extends Notification
         $this->reservation = $reservation;
     }
 
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Confirmación de Reserva')
@@ -37,7 +37,7 @@ class ReservationConfirmed extends Notification
             ->line('Fecha de fin: ' . $this->reservation->check_out_date)
             ->line('Total a pagar: ' . $this->reservation->total_price)
             ->line('Gracias por elegirnos.')
-            ->salutation('Saludos, Hotel XYZ');
+            ->salutation('Saludos, Hotel La Colina');
     }
 
     /**
