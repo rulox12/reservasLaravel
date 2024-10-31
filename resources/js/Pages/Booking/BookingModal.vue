@@ -5,13 +5,13 @@
             <form @submit.prevent="handleSubmit">
                 <div class="mb-4">
                     <label for="user" class="block mb-1">Usuario</label>
-                    <select v-model="booking.user_id" class="border rounded-lg w-full p-2">
+                    <select v-model="form.user_id" class="border rounded-lg w-full p-2">
                         <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                     </select>
                 </div>
                 <div class="mb-4">
                     <label for="room" class="block mb-1">Habitación</label>
-                    <select v-model="booking.room_id" class="border rounded-lg w-full p-2">
+                    <select v-model="form.room_id" class="border rounded-lg w-full p-2">
                         <option v-for="room in rooms" :key="room.id" :value="room.id">{{ room.room_number }}</option>
                     </select>
                 </div>
@@ -67,6 +67,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { ref, watch } from 'vue';
 
@@ -124,6 +125,7 @@ const resetForm = () => {
 };
 
 const handleSubmit = () => {
+    console.log(form.value);
     props.onSave(form.value);
     closeModal();
 };

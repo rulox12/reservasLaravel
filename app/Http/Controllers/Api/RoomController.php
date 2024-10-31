@@ -107,7 +107,7 @@ class RoomController extends Controller
             });
 
             if ($capacity) {
-                $availableRooms->where('capacity', '>=', $capacity);
+                $availableRooms->where('capacity', '=', $capacity);
             }
 
             if (!is_null($airConditioning)) {

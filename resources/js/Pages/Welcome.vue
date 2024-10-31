@@ -17,6 +17,9 @@ defineProps({
         type: String,
         required: true,
     },
+    authUser: {
+
+    }
 });
 
 const items = ref([]);
@@ -61,7 +64,6 @@ const handleSubmit = async () => {
     }
 };
 
-// Carrusel de imágenes
 const images = ref([
     "https://i.ibb.co/pdCNLJk/2.jpg",
     "https://i.ibb.co/St2c6xD/1.jpg",
@@ -137,19 +139,19 @@ const scrollToResult = () => {
         <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
             <Link v-if="$page.props.auth.user" :href="route('profile.edit')"
                   class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                <!--Dashboard -->
+                {{ authUser.name }}
             </Link>
 
             <template v-else>
                 <Link :href="route('login')"
                       class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                    Log in
+                    Ingresar
                 </Link>
 
-                <Link v-if="canRegister" :href="route('register')"
+                <!--<Link v-if="canRegister" :href="route('register')"
                       class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                    Register
-                </Link>
+                    Registrar
+                </Link>-->
             </template>
         </nav>
     </header>

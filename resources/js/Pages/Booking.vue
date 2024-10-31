@@ -117,11 +117,11 @@ const saveBooking = async (booking) => {
             if (response.data.success) {
                 swal({
                     title: '¡Éxito!',
-                    text: response.data.message,
                     icon: 'success',
                     button: 'OK',
+                }).then(() => {
+                    window.location.reload();
                 });
-
                 reactiveBookings.value.push(response.data.booking);
             }
         }
