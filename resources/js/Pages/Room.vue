@@ -146,7 +146,9 @@ const saveRoom = async (room) => {
                                 <th class="px-4 py-2 text-left">Número de Habitación</th>
                                 <th class="px-4 py-2 text-left">Tipo</th>
                                 <th class="px-4 py-2 text-left">Precio</th>
+                                <th class="px-4 py-2 text-left">Capacidad</th>
                                 <th class="px-4 py-2 text-left">Estado</th>
+                                <th class="px-4 py-2 text-left">Aire A</th>
                                 <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                             </thead>
@@ -155,7 +157,9 @@ const saveRoom = async (room) => {
                                 <td class="border px-4 py-2">{{ room.room_number }}</td>
                                 <td class="border px-4 py-2">{{ room.type }}</td>
                                 <td class="border px-4 py-2">{{ room.price }}</td>
+                                <td class="border px-4 py-2">{{ room.capacity }}</td>
                                 <td class="border px-4 py-2">{{ room.status }}</td>
+                                <td class="border px-4 py-2">{{ room.climate_control }}</td>
                                 <td class="border px-4 py-2">
                                     <button @click="editRoom(room)" class="text-green-500 hover:text-green-600">
                                         <svg class="h-5 w-5 text-green-300" viewBox="0 0 24 24" stroke-width="2"

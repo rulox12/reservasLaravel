@@ -105,6 +105,8 @@ class RoomController extends Controller
                 $query->where('check_in_date', '<', $endDate)
                     ->where('check_out_date', '>', $startDate);
             });
+            
+            $availableRooms->where('status', 'available');
 
             if ($capacity) {
                 $availableRooms->where('capacity', '=', $capacity);
