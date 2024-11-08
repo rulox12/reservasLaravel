@@ -21,15 +21,21 @@ class UserController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
+            'identification' => 'required|string|unique:users|max:20',
+            'phone' => 'required|string|max:20',
             'email' => 'required|string|email|max:255|unique:users',
+            'city' => 'nullable|string|max:100',
             'password' => 'required|string|min:8',
             'role' => 'required|in:client,admin',
         ]);
 
         $user = User::create([
-            'name' => $validatedData['name'],
+            'full_name' => $validatedData['full_name'],
+            'identification' => $validatedData['identification'],
+            'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
+            'city' => $validatedData['city'] ?? null,
             'password' => bcrypt($validatedData['password']),
             'role' => $validatedData['role'],
         ]);
@@ -44,7 +50,14 @@ class UserController extends Controller
     public function update(Request $request, string $id): JsonResponse
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
+            'identification' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('users')->ignore($id),
+            ],
+            'phone' => 'required|string|max:20',
             'email' => [
                 'required',
                 'string',
@@ -52,6 +65,7 @@ class UserController extends Controller
                 'max:255',
                 Rule::unique('users')->ignore($id),
             ],
+            'city' => 'nullable|string|max:100',
             'password' => 'nullable|string|min:8',
             'role' => 'required|in:client,admin',
         ]);
@@ -59,8 +73,11 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $user->update([
-            'name' => $validatedData['name'],
+            'full_name' => $validatedData['full_name'],
+            'identification' => $validatedData['identification'],
+            'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
+            'city' => $validatedData['city'] ?? $user->city,
             'password' => isset($validatedData['password']) ? bcrypt($validatedData['password']) : $user->password,
             'role' => $validatedData['role'],
         ]);

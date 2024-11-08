@@ -253,7 +253,6 @@ const scrollToResult = () => {
     </section>
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full h-[80vh] overflow-y-auto">
-            <!-- Carrusel de imágenes -->
             <div class="mb-4">
                 <div class="relative">
                     <img :src="images[currentImageIndex]" alt="Imagen de habitación" class="w-full rounded-lg"/>

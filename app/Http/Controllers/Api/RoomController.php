@@ -56,7 +56,7 @@ class RoomController extends Controller
             'capacity' => 'required|in:2,4,8',
             'climate_control' => 'required|in:fan,air_conditioning',
         ]);
-
+        
         $room = Room::findOrFail($id);
 
         $room->update($validatedData);

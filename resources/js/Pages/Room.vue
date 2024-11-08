@@ -114,6 +114,7 @@ const saveRoom = async (room) => {
     }
     isModalOpen.value = false;
 };
+
 </script>
 
 <template>
@@ -133,7 +134,6 @@ const saveRoom = async (room) => {
                         Añadir Nueva Habitación
                     </button>
                 </div>
-
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveRooms?.length === 0" class="text-center">
                         <p class="text-gray-600">No hay habitaciones disponibles. Por favor, añade una habitación.</p>

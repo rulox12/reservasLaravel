@@ -155,7 +155,6 @@ const saveBooking = async (booking) => {
                         Crear nueva reserva
                     </button>
                 </div>
-
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveBookings?.length === 0" class="text-center">
                         <p class="text-gray-600">No bookings available. Please add a booking.</p>
@@ -175,7 +174,7 @@ const saveBooking = async (booking) => {
                             </thead>
                             <tbody>
                             <tr v-for="(booking, index) in reactiveBookings" :key="booking.id">
-                                <td class="border px-4 py-2">{{ booking.user.name }}</td>
+                                <td class="border px-4 py-2">{{ booking.user.full_name }}</td>
                                 <td class="border px-4 py-2">{{ booking.room.room_number }}</td>
                                 <td class="border px-4 py-2">{{ booking.check_in_date }}</td>
                                 <td class="border px-4 py-2">{{ booking.check_out_date }}</td>

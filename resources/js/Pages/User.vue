@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head} from '@inertiajs/vue3';
-import {ref, inject, watch} from 'vue';
+import {ref, inject, computed} from 'vue';
 import axios from 'axios';
 import UserModal from './User/UserModal.vue';
 
@@ -15,6 +15,8 @@ const props = defineProps({
 });
 
 const reactiveUsers = ref([...props.users]);
+const searchType = ref('');
+const searchValue = ref('');
 
 const editUser = (user) => {
     selectedUser.value = user;
@@ -113,6 +115,33 @@ const saveUser = async (user) => {
     }
     isModalOpen.value = false;
 };
+
+const searchUser = async () => {
+    if (searchType.value && searchValue.value) {
+        try {
+            // Hacemos la llamada al servicio
+            const response = await axios.get(route('users.search'), {
+                params: {
+                    type: searchType.value,
+                    value: searchValue.value,
+                },
+            });
+
+            // Actualizamos `reactiveUsers` con los resultados de la búsqueda
+            reactiveUsers.value = response.data.users;
+        } catch (error) {
+            console.error('Error buscando usuarios:', error);
+            swal({
+                title: 'Error',
+                text: 'Hubo un problema al realizar la búsqueda.',
+                icon: 'error',
+                button: 'OK',
+            });
+        }
+    } else {
+        reactiveUsers.value = [...props.users];
+    }
+};
 </script>
 <template>
     <Head title="Users Dashboard"/>
@@ -131,7 +160,25 @@ const saveUser = async (user) => {
                         Añadir Nuevo Usuario
                     </button>
                 </div>
-
+                <div class="flex mb-6 space-x-6">
+                    <select
+                        v-model="searchType"
+                        class="border border-gray-300 rounded-md p-2 w-48"
+                        placeholder="Selecciona un tipo de búsqueda"
+                    >
+                        <option value="identificacion">Identificación</option>
+                        <option value="nombre_completo">Nombre Completo</option>
+                    </select>
+                    <input
+                        v-model="searchQuery"
+                        type="text"
+                        placeholder="Buscar usuario..."
+                        class="border rounded-lg p-2 flex-1"
+                    />
+                    <button @click="searchUser" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                        Buscar
+                    </button>
+                </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveUsers?.length === 0" class="text-center">
                         <p class="text-gray-600">No hay usuarios disponibles. Por favor, agrega un usuario.</p>
@@ -141,17 +188,23 @@ const saveUser = async (user) => {
                         <table class="min-w-full">
                             <thead>
                             <tr>
-                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Nombre Completo</th>
                                 <th class="px-4 py-2 text-left">Correo Electrónico</th>
                                 <th class="px-4 py-2 text-left">Rol</th>
+                                <th class="px-4 py-2 text-left">Identificación</th>
+                                <th class="px-4 py-2 text-left">Teléfono</th>
+                                <th class="px-4 py-2 text-left">Ciudad</th>
                                 <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(user, index) in reactiveUsers" :key="user.id">
-                                <td class="border px-4 py-2">{{ user.name }}</td>
+                                <td class="border px-4 py-2">{{ user.full_name }}</td>
                                 <td class="border px-4 py-2">{{ user.email }}</td>
                                 <td class="border px-4 py-2">{{ user.role }}</td>
+                                <td class="border px-4 py-2">{{ user.identification }}</td>
+                                <td class="border px-4 py-2">{{ user.phone }}</td>
+                                <td class="border px-4 py-2">{{ user.city }}</td>
                                 <td class="border px-4 py-2">
                                     <button @click="editUser(user)" class="text-green-500 hover:text-green-600">
                                         <svg class="h-5 w-5 text-green-300" viewBox="0 0 24 24" stroke-width="2"

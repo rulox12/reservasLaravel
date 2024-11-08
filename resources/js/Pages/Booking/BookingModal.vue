@@ -6,7 +6,7 @@
                 <div class="mb-4">
                     <label for="user" class="block mb-1">Usuario</label>
                     <select v-model="form.user_id" class="border rounded-lg w-full p-2">
-                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
+                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.full_name }}</option>
                     </select>
                 </div>
                 <div class="mb-4">

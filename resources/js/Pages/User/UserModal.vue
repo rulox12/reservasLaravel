@@ -4,11 +4,41 @@
             <h2 class="text-xl font-semibold mb-4">{{ editing ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</h2>
             <form @submit.prevent="handleSubmit">
                 <div class="mb-4">
-                    <label for="name" class="block mb-1">Nombre</label>
+                    <label for="full_name" class="block mb-1">Nombre Completo</label>
                     <input
-                        v-model="form.name"
+                        v-model="form.full_name"
                         type="text"
-                        id="name"
+                        id="full_name"
+                        required
+                        class="border rounded-lg w-full p-2"
+                    />
+                </div>
+                <div class="mb-4">
+                    <label for="identification" class="block mb-1">Identificación</label>
+                    <input
+                        v-model="form.identification"
+                        type="text"
+                        id="identification"
+                        required
+                        class="border rounded-lg w-full p-2"
+                    />
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block mb-1">Teléfono</label>
+                    <input
+                        v-model="form.phone"
+                        type="text"
+                        id="phone"
+                        required
+                        class="border rounded-lg w-full p-2"
+                    />
+                </div>
+                <div class="mb-4">
+                    <label for="city" class="block mb-1">Ciudad</label>
+                    <input
+                        v-model="form.city"
+                        type="text"
+                        id="city"
                         required
                         class="border rounded-lg w-full p-2"
                     />
@@ -75,6 +105,10 @@ const props = defineProps({
 });
 
 const form = ref({
+    full_name: '',
+    identification: '',
+    phone: '',
+    city: '',
     name: '',
     email: '',
     password: '',
@@ -96,6 +130,10 @@ watch(() => props.user, (newUser) => {
 
 const resetForm = () => {
     form.value = {
+        full_name: '',
+        identification: '',
+        phone: '',
+        city: '',
         name: '',
         email: '',
         password: '',
