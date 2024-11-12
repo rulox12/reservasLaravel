@@ -21,6 +21,7 @@ class BookingController extends Controller
             'bookings' => Booking::with(['user', 'room'])->get()
         ]);
     }
+
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
@@ -96,6 +97,8 @@ class BookingController extends Controller
             'email' => 'required|email',
             'name' => 'required|string|max:255',
             'room_id' => 'required|exists:rooms,id',
+            'identification' => 'required',
+            'phone' => 'required',
         ]);
 
         $isRoomAvailable = $this->isRoomAvailable(
@@ -110,7 +113,12 @@ class BookingController extends Controller
             ], 422);
         }
 
-        $user = $this->findOrCreateUser($validatedData['email'], $validatedData['name']);
+        $user = $this->findOrCreateUser(
+            $validatedData['email'],
+            $validatedData['name'],
+            $validatedData['phone'],
+            $validatedData['identification']
+        );
 
         $reservation = Booking::create([
             'user_id' => $user->id,
@@ -129,7 +137,7 @@ class BookingController extends Controller
         ], 201);
     }
 
-    private function findOrCreateUser(string $email, string $name): User
+    private function findOrCreateUser(string $email, string $name, string $phone, string $identification): User
     {
         $user = User::where('email', $email)->first();
 
@@ -137,6 +145,8 @@ class BookingController extends Controller
             $user = User::create([
                 'email' => $email,
                 'name' => $name,
+                'identification' => $identification,
+                'phone' => $phone,
                 'password' => bcrypt($name),
                 'role' => 'client',
             ]);

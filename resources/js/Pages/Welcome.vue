@@ -32,6 +32,8 @@ const showModal = ref(false);
 const selectedRoom = ref(null);
 const name = ref('');
 const email = ref('');
+const identification = ref('');
+const phone = ref('');
 const totalPrice = ref('');
 const swal = inject('$swal');
 const resultContainer = ref(null);
@@ -101,6 +103,8 @@ const confirmReservation = async () => {
             totalPrice: totalPrice.value,
             email: email.value,
             name: name.value,
+            phone: phone.value,
+            identification: identification.value,
             room_id: selectedRoom.value.id
         }
         try {
@@ -276,17 +280,27 @@ const scrollToResult = () => {
 
             <!-- Campos de Nombre y Correo -->
             <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Identificación</label>
+                <input type="number" id="identification" v-model="identification"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700" required>
+            </div>
+            <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Nombre</label>
                 <input type="text" id="name" v-model="name"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700" required>
+            </div>
+            <div class="mb-4">
+                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Celular</label>
+                <input type="number" id="phone" v-model="phone"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700" required>
             </div>
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Correo
-                    Electrónico</label>
+                    Electrónico
+                </label>
                 <input type="email" id="email" v-model="email"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700">
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700" required>
             </div>
-
             <div class="flex justify-end space-x-4">
                 <button @click="showModal = false"
                         class="w-full sm:w-auto bg-[#394398] text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-[#2c347a] focus:ring-4 focus:ring-purple-200">
