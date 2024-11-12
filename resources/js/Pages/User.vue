@@ -119,7 +119,6 @@ const saveUser = async (user) => {
 const searchUser = async () => {
     if (searchType.value && searchValue.value) {
         try {
-            // Hacemos la llamada al servicio
             const response = await axios.get(route('users.search'), {
                 params: {
                     type: searchType.value,
@@ -127,7 +126,6 @@ const searchUser = async () => {
                 },
             });
 
-            // Actualizamos `reactiveUsers` con los resultados de la búsqueda
             reactiveUsers.value = response.data.users;
         } catch (error) {
             console.error('Error buscando usuarios:', error);
@@ -139,6 +137,7 @@ const searchUser = async () => {
             });
         }
     } else {
+        console.log(searchType.value , searchValue.value);
         reactiveUsers.value = [...props.users];
     }
 };
@@ -160,24 +159,27 @@ const searchUser = async () => {
                         Añadir Nuevo Usuario
                     </button>
                 </div>
-                <div class="flex mb-6 space-x-6">
+                <div class="mb-4">
+                    <div class="flex gap-6">
                     <select
                         v-model="searchType"
-                        class="border border-gray-300 rounded-md p-2 w-48"
+                        class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
                         placeholder="Selecciona un tipo de búsqueda"
                     >
-                        <option value="identificacion">Identificación</option>
-                        <option value="nombre_completo">Nombre Completo</option>
+                        <option value="identification">Identificación</option>
+                        <option value="full_name">Nombre Completo</option>
                     </select>
                     <input
-                        v-model="searchQuery"
+                        v-model="searchValue"
                         type="text"
                         placeholder="Buscar usuario..."
-                        class="border rounded-lg p-2 flex-1"
+                        class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
                     />
                     <button @click="searchUser" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
                         Buscar
                     </button>
+                    </div>
+
                 </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveUsers?.length === 0" class="text-center">

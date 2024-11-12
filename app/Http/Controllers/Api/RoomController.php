@@ -36,7 +36,7 @@ class RoomController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Room created successfully!',
+            'message' => '¡Habitación creada con éxito!',
             'room' => $room
         ]);
     }
@@ -56,14 +56,14 @@ class RoomController extends Controller
             'capacity' => 'required|in:2,4,8',
             'climate_control' => 'required|in:fan,air_conditioning',
         ]);
-        
+
         $room = Room::findOrFail($id);
 
         $room->update($validatedData);
 
         return response()->json([
             'success' => true,
-            'message' => 'Room updated successfully!',
+            'message' => '¡Habitación actualizada con éxito!',
             'room' => $room
         ]);
     }
@@ -76,12 +76,12 @@ class RoomController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Room deleted successfully!',
+                'message' => '¡Habitación eliminada con éxito!',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting room: ' . $e->getMessage(),
+                'message' => 'Error al eliminar la habitación: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -105,7 +105,7 @@ class RoomController extends Controller
                 $query->where('check_in_date', '<', $endDate)
                     ->where('check_out_date', '>', $startDate);
             });
-            
+
             $availableRooms->where('status', 'available');
 
             if ($capacity) {
@@ -130,5 +130,44 @@ class RoomController extends Controller
                 'rooms' => []
             ], 500);
         }
+    }
+
+    public function search(Request $request)
+    {
+        // Validamos los parámetros de búsqueda
+        $request->validate([
+            'room_number' => 'nullable|string|max:255',
+            'status' => 'nullable|string|in:available,reserved,occupied',
+            'capacity' => 'nullable|in:2,4,8',
+        ]);
+
+        // Obtenemos los parámetros de búsqueda
+        $room_number = $request->input('room_number');
+        $status = $request->input('status');
+        $capacity = $request->input('capacity');
+
+        // Construimos la consulta de búsqueda
+        $rooms = Room::query();
+
+        // Filtrar por número de habitación si está presente
+        if ($room_number) {
+            $rooms->where('room_number', 'like', '%' . $room_number . '%');
+        }
+
+        // Filtrar por estado si está presente
+        if ($status) {
+            $rooms->where('status', $status);
+        }
+
+        // Filtrar por capacidad si está presente
+        if ($capacity) {
+            $rooms->where('capacity', $capacity);
+        }
+
+        // Ejecutamos la consulta y obtenemos los resultados
+        $rooms = $rooms->get();
+
+        // Retornamos los resultados como una respuesta JSON
+        return response()->json(['rooms' => $rooms]);
     }
 }

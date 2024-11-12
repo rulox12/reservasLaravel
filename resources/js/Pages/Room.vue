@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, inject, watch } from 'vue';
+import {Head} from '@inertiajs/vue3';
+import {ref, inject, watch, computed} from 'vue';
 import axios from 'axios';
 import RoomModal from './Room/RoomModal.vue';
 
@@ -13,6 +13,13 @@ const props = defineProps({
         required: true,
     },
 });
+
+const filters = ref({
+    room_number: '',
+    status: '',
+    capacity: '',
+});
+
 
 const reactiveRooms = ref([...props.rooms]);
 
@@ -73,6 +80,16 @@ const closeModalHandler = () => {
     isModalOpen.value = false;
 };
 
+const filteredRooms = computed(() => {
+    return reactiveRooms.value.filter((room) => {
+        const roomNumberMatches = room.room_number.includes(filters.value.room_number);
+        const statusMatches = filters.value.status ? room.status === filters.value.status : true;
+        const capacityMatches = filters.value.capacity ? room.capacity === filters.value.capacity : true;
+
+        return roomNumberMatches && statusMatches && capacityMatches;
+    });
+});
+
 const saveRoom = async (room) => {
     try {
         if (room.id) {
@@ -115,6 +132,28 @@ const saveRoom = async (room) => {
     isModalOpen.value = false;
 };
 
+const translateStatus = (status) => {
+    const statusMap = {
+        'available': 'Disponible',
+        'occupied': 'Ocupada',
+        'reserved': 'Reservada',
+    };
+
+    return statusMap[status] || status;
+}
+
+const getStatusClass = (status) => {
+    switch (status) {
+        case 'available':
+            return 'text-green-500';
+        case 'reserved':
+            return 'text-yellow-500';
+        case 'occupied':
+            return 'text-red-500';
+        default:
+            return 'text-gray-500';
+    }
+};
 </script>
 
 <template>
@@ -133,6 +172,30 @@ const saveRoom = async (room) => {
                     <button @click="createRoom" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
                         Añadir Nueva Habitación
                     </button>
+                </div>
+                <div class="mb-4">
+                    <div class="flex gap-6">
+                        <input
+                            v-model="filters.room_number"
+                            type="text"
+                            placeholder="Número de Habitación"
+                            class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
+                        />
+                        <select v-model="filters.status"
+                                class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs">
+                            <option value="">Estado</option>
+                            <option value="available">Disponible</option>
+                            <option value="reserved">Reservada</option>
+                            <option value="occupied">Ocupada</option>
+                        </select>
+                        <select v-model="filters.capacity"
+                                class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs">
+                            <option value="">Capacidad</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveRooms?.length === 0" class="text-center">
@@ -153,12 +216,14 @@ const saveRoom = async (room) => {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(room, index) in reactiveRooms" :key="room.id">
+                            <tr v-for="(room, index) in filteredRooms" :key="room.id">
                                 <td class="border px-4 py-2">{{ room.room_number }}</td>
                                 <td class="border px-4 py-2">{{ room.type }}</td>
                                 <td class="border px-4 py-2">{{ room.price }}</td>
                                 <td class="border px-4 py-2">{{ room.capacity }}</td>
-                                <td class="border px-4 py-2">{{ room.status }}</td>
+                                <td class="border px-4 py-2" :class="getStatusClass(room.status)">
+                                    {{ translateStatus(room.status) }}
+                                </td>
                                 <td class="border px-4 py-2">{{ room.climate_control }}</td>
                                 <td class="border px-4 py-2">
                                     <button @click="editRoom(room)" class="text-green-500 hover:text-green-600">

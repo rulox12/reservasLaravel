@@ -17,6 +17,9 @@ const props = defineProps({
 const reactiveBookings = ref([...props.bookings]);
 const users = ref([]);
 const rooms = ref([]);
+const roomNumber = ref('');
+const userId = ref('');
+const fullName = ref('');
 
 const editBooking = (booking) => {
     fetchUsersAndRooms();
@@ -135,6 +138,28 @@ const saveBooking = async (booking) => {
     }
     isModalOpen.value = false;
 };
+
+const searchBookings = async () => {
+    try {
+        const response = await axios.get(route('bookings.search'), {
+            params: {
+                roomNumber: roomNumber.value,
+                userId: userId.value,
+                fullName: fullName.value
+            },
+        });
+
+        reactiveBookings.value = response.data.bookings;
+    } catch (error) {
+        console.error('Error buscando reservas:', error);
+        swal({
+            title: 'Error',
+            text: 'Hubo un problema al realizar la búsqueda.',
+            icon: 'error',
+            button: 'OK',
+        });
+    }
+}
 </script>
 
 <template>
@@ -155,6 +180,27 @@ const saveBooking = async (booking) => {
                         Crear nueva reserva
                     </button>
                 </div>
+                <form @submit.prevent="searchBookings">
+                    <div class="mb-4">
+                        <div class="flex gap-6">
+                            <input type="text"
+                                   class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
+                                   v-model="roomNumber"
+                                   placeholder="Número de Habitación"/>
+                            <input type="text"
+                                   class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
+                                   v-model="fullName"
+                                   placeholder="Nombre usuario"/>
+                            <input type="text"
+                                   v-model="userId"
+                                   class="border border-gray-300 px-6 py-3 rounded-lg text-lg w-full max-w-xs"
+                                   placeholder="Identificación del usuario"/>
+                            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+                </form>
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <div v-if="reactiveBookings?.length === 0" class="text-center">
                         <p class="text-gray-600">No bookings available. Please add a booking.</p>

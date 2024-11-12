@@ -20,9 +20,11 @@ Route::post('/bookings', [BookingController::class, 'store'])->name('booking.sto
 Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('booking.update');
 Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 Route::post('/bookings/reservation', [BookingController::class, 'createReservation'])->name('booking.reservation');
+Route::get('/bookings/search', [BookingController::class, 'search'])->name('bookings.search');
+
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
+Route::get('/users/search', [UserController::class, 'search'])->name('users.search');

@@ -43,7 +43,7 @@ class BookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Booking created successfully!',
+            'message' => '¡Reserva creada con éxito!',
             'booking' => $booking
         ]);
     }
@@ -64,7 +64,7 @@ class BookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Booking updated successfully!',
+            'message' => '¡Reserva actualizada con éxito!',
             'booking' => $booking
         ]);
     }
@@ -77,12 +77,12 @@ class BookingController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Booking deleted successfully!',
+                'message' => '¡Reserva eliminada con éxito!',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting booking: ' . $e->getMessage(),
+                'message' => 'Error al eliminar la reserva: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -157,5 +157,35 @@ class BookingController extends Controller
                     });
             })
             ->exists();
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = Booking::with(['user', 'room']);
+
+        if ($request->has('roomNumber') && $request->roomNumber) {
+            $query->whereHas('room', function ($query) use ($request) {
+                $query->where('room_number', 'like', '%' . $request->roomNumber . '%');
+            });
+        }
+
+        if ($request->has('fullName') && $request->fullName) {
+            $query->whereHas('user', function ($query) use ($request) {
+                $query->where('full_name', 'like', '%' . $request->fullName . '%');
+            });
+        }
+
+        if ($request->has('userId') && $request->userId) {
+            $query->whereHas('user', function ($query) use ($request) {
+                $query->where('identification', 'like', '%' . $request->userId . '%');
+            });
+        }
+
+        $bookings = $query->get();
+
+        return response()->json([
+            'success' => true,
+            'bookings' => $bookings
+        ]);
     }
 }

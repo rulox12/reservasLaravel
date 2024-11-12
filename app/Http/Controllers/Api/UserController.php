@@ -42,7 +42,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'User created successfully!',
+            'message' => '¡Usuario creado con éxito!',
             'user' => $user
         ]);
     }
@@ -84,7 +84,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'User updated successfully!',
+            'message' => '¡Usuario actualizado con éxito!',
             'user' => $user
         ]);
     }
@@ -97,13 +97,36 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User deleted successfully!',
+                'message' => '¡Usuario eliminado con éxito!',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting user: ' . $e->getMessage(),
+                'message' => 'Error al eliminar el usuario: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|string',
+            'value' => 'required|string|max:255',
+        ]);
+
+        $type = $request->input('type');
+        $value = $request->input('value');
+
+        $users = User::query();
+
+        if ($type === 'identification') {
+            $users->where('identification', 'like', '%' . $value . '%');
+        } elseif ($type === 'full_name') {
+            $users->where('full_name', 'like', '%' . $value . '%');
+        }
+
+        $users = $users->get();
+
+        return response()->json(['users' => $users]);
     }
 }
