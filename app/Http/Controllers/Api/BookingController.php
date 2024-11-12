@@ -144,7 +144,7 @@ class BookingController extends Controller
         if (!$user) {
             $user = User::create([
                 'email' => $email,
-                'name' => $name,
+                'full_name' => $name,
                 'identification' => $identification,
                 'phone' => $phone,
                 'password' => bcrypt($name),
